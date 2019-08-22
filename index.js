@@ -1,14 +1,10 @@
+/* eslint-disable no-console */
 const { spawn } = require('child_process');
-const ls = spawn('ls', ['-lh', '/usr']);
+const { initSocat } = require('./socat.js');
 
-ls.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
-});
-
-ls.stderr.on('data', (data) => {
-  console.error(`stderr: ${data}`);
-});
-
-ls.on('close', (code) => {
-  console.log(`child process exited with code ${code}`);
-});
+(async () => {
+  const { socat, tty1, tty2 } = await initSocat();
+  console.log({ tty1, tty2 });
+  console.log('KILL!');
+  socat.kill('SIGHUP');
+})();

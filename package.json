@@ -13,8 +13,5 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2"
   },
-  "dependencies": {
-    "@serialport/parser-readline": "^2.0.2",
-    "serialport": "^7.1.5"
-  }
+  "dependencies": {}
 }

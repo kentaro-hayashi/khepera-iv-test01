@@ -2,29 +2,29 @@
 const { spawn } = require('child_process');
 const readline = require('readline');
 
-exports.initSocat = () => new Promise((resolve) => {
-  const socat = spawn('socat', ['-d', '-d', 'pty,raw,echo=0', 'pty,raw,echo=0']);
-  let tty1;
-  let tty2;
+exports.initSocat = (onData) => new Promise((resolve) => {
+  const socat = spawn('socat', ['-d', '-d', 'pty,raw,echo=0', '-']);
+  let tty;
 
-  socat.stdout.on('data', (data) => {
-    console.log(`socat: ${data}`);
+  const readlineOut = readline.createInterface(socat.stdout, {});
+  readlineOut.on('line', (line) => {
+    onData(line);
   });
 
-  const rl = readline.createInterface(socat.stderr, {});
-  rl.on('line', (line) => {
+  const readlineErr = readline.createInterface(socat.stderr, {});
+  readlineErr.on('line', (line) => {
     console.log(`socat: ${line}`);
+    if (line.toString().includes('starting')) {
+      console.log('socat ready');
+      resolve({ socat, tty });
+      return;
+    }
+
     const device = line.toString().split(' ').filter((str) => str.includes('dev')).join();
     if (device === '') {
       return;
     }
-    if (tty1 == null) {
-      tty1 = device;
-    } else if (tty2 == null) {
-      tty2 = device;
-      console.log('socat ready');
-      resolve({ socat, tty1, tty2 });
-    }
+    tty = device;
   });
 
   socat.on('close', (code) => {

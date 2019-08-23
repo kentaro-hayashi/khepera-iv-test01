@@ -1,21 +1,20 @@
 /* eslint-disable no-console */
 const SerialPort = require('serialport');
+const Readline = require('@serialport/parser-readline');
 
 exports.initKh4port = (tty, onData) => {
   const port = new SerialPort(tty, {
-    parser: SerialPort.parsers.readline('\n'),
-    baudrate: 9600,
-  });
-
-  port.on('data', (data) => {
-    console.log(`port: ${data}`);
-    onData(data);
+    baudRate: 9600,
   });
 
   port.on('error', (e) => {
     console.error(e);
   });
 
+  const parser = port.pipe(new Readline());
+  parser.on('data', (line) => {
+    onData(line);
+  });
 
   port.on('close', () => {
     console.log('port closed');

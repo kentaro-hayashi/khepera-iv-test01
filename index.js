@@ -7,7 +7,9 @@ const { sleep } = require('./sleep');
 (async () => {
   const { socat, tty1, tty2 } = await initSocat();
   const kh4server = initKh4server(tty2);
-  const port = initKh4port(tty1);
+  const port = initKh4port(tty1, (line) => {
+    console.log(`port: ${line}`);
+  });
 
   port.write('B\n');
   await sleep(3);

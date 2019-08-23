@@ -25,5 +25,5 @@ const { sleep } = require('./sleep');
 
   port.close();
   kh4server.kill('SIGTERM');
-  socat.kill('SIGHTERM');
+  socat.kill('SIGTERM');
 })();

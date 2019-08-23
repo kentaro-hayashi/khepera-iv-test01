@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const { spawn } = require('child_process');
+const readline = require('readline');
 
 exports.initSocat = function initSocat() {
   return new Promise((resolve, reject) => {
@@ -11,9 +12,10 @@ exports.initSocat = function initSocat() {
       console.log(`stdout: ${data}`);
     });
 
-    socat.stderr.on('data', (data) => {
-      console.log(`stderr: ${data}`);
-      const device = data.toString().split(' ').filter((str) => str.includes('dev')).join();
+    const rl = readline.createInterface(socat.stderr, {});
+    rl.on('line', (line) => {
+      console.log(`stderr: ${line}`);
+      const device = line.toString().split(' ').filter((str) => str.includes('dev')).join();
       if (device === '') {
         return;
       }

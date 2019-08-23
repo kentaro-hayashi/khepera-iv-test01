@@ -14,6 +14,15 @@ const { sleep } = require('./sleep');
   port.write('B\n');
   await sleep(3);
 
+  port.write('G\n');
+  await sleep(3);
+
+  port.write('D,200,-200\n');
+  await sleep(3);
+
+  port.write('D,0,0\n');
+  await sleep(3);
+
   port.close();
   kh4server.kill('SIGHUP');
   socat.kill('SIGHUP');

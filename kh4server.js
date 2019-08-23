@@ -16,4 +16,5 @@ exports.initKh4server = (tty) => {
     console.log(`kh4server exited with code ${code}`);
   });
   console.log('kh4server ready');
+  return kh4server;
 };
